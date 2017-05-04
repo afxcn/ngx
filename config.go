@@ -10,7 +10,7 @@ import (
 
 const (
 	settingFile      = "setting.json"
-	siteTemplateFile = "account.key"
+	siteTemplateFile = "site.conf"
 )
 
 var configDir string
@@ -39,6 +39,9 @@ func init() {
 }
 
 type userConfig struct {
+}
+
+type serverConfig struct {
 }
 
 func readConfig() (*userConfig, error) {
