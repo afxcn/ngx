@@ -18,9 +18,9 @@ var siteConfDir string
 var siteRootDir string
 
 func init() {
-	configDir = os.Getenv("NGX_CLI_CONFIG")
-	siteConfDir = os.Getenv("NGX_CLI_SITE_CONFIG")
-	siteRootDir = os.Getenv("NGX_CLI_SITE_ROOT")
+	configDir = os.Getenv("NGC_CONFIG")
+	siteConfDir = os.Getenv("NGC_SITE_CONFIG")
+	siteRootDir = os.Getenv("NGC_SITE_ROOT")
 
 	if configDir == "" {
 
