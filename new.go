@@ -25,6 +25,14 @@ func runNew(args []string) {
 		fatalf("no domain specified")
 	}
 
+	siteConfData, err := readRC(siteConfFile)
+
+	if err != nil {
+		fatalf("read site conf failure: %v", err)
+	}
+
+	fmt.Printf("%s", siteConfData)
+
 	for _, domain := range args {
 		fmt.Println(domain)
 	}

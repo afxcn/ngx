@@ -2,15 +2,19 @@ package main
 
 import (
 	"encoding/json"
+	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"os/user"
 	"path/filepath"
 )
 
 const (
-	settingFile      = "setting.json"
-	siteTemplateFile = "site.conf"
+	settingFile   = "setting.json"
+	siteConfFile  = "site.conf"
+	siteIndexFile = "index.html"
+	siteRawURL    = "https://raw.githubusercontent.com/afxcn/ngx-cli/master/"
 )
 
 var configDir string
@@ -37,9 +41,17 @@ func init() {
 		siteRootDir = "/opt/local/www"
 	}
 
-	createDir(configDir, 0700)
-	createDir(siteConfDir, 0700)
-	createDir(siteRootDir, 0755)
+	if err := createDir(configDir, 0700); err != nil {
+		fatalf("create configDir failure: %v", err)
+	}
+
+	if err := createDir(siteConfDir, 0700); err != nil {
+		fatalf("create siteConfDir failure: %v", err)
+	}
+
+	if err := createDir(siteRootDir, 0755); err != nil {
+		fatalf("create siteRootDir failure: %v", err)
+	}
 }
 
 type userConfig struct {
@@ -75,4 +87,48 @@ func writeConfig(uc *userConfig) error {
 		return err
 	}
 	return ioutil.WriteFile(filepath.Join(configDir, settingFile), b, 0600)
+}
+
+func readRC(filename string) ([]byte, error) {
+	rcDir := filepath.Join(configDir, "rc")
+
+	if err := createDir(rcDir, 0700); err != nil {
+		return nil, err
+	}
+
+	fp := filepath.Join(rcDir, filename)
+
+	if _, err := os.Stat(fp); os.IsNotExist(err) {
+		url := siteRawURL + "rc/" + filename
+
+		fn, err := os.OpenFile(fp, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
+
+		if err != nil {
+			return nil, err
+		}
+
+		defer fn.Close()
+
+		resp, err := http.Get(url)
+
+		if err != nil {
+			return nil, err
+		}
+
+		defer resp.Body.Close()
+
+		_, err = io.Copy(fn, resp.Body)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	bytes, err := ioutil.ReadFile(fp)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes, nil
 }
