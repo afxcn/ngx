@@ -89,7 +89,7 @@ func writeConfig(uc *userConfig) error {
 	return ioutil.WriteFile(filepath.Join(configDir, settingFile), b, 0600)
 }
 
-func readRC(filename string) ([]byte, error) {
+func siteRC(filename string) ([]byte, error) {
 	rcDir := filepath.Join(configDir, "rc")
 
 	if err := createDir(rcDir, 0700); err != nil {
