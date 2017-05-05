@@ -39,9 +39,14 @@ func init() {
 }
 
 type userConfig struct {
+	Server []serverConfig
 }
 
 type serverConfig struct {
+	ServerName string
+	IPAddress  string
+	Username   string
+	Password   string
 }
 
 func readConfig() (*userConfig, error) {
