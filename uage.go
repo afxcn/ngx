@@ -21,6 +21,7 @@ The commands are:
 	{{.Name | printf "%-11s"}} {{.Short}}{{end}}{{end}}
 
 Use "ngc help [command]" for more information about a command.
+
 `
 )
 

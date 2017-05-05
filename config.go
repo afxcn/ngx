@@ -25,7 +25,7 @@ func init() {
 	if configDir == "" {
 
 		if u, err := user.Current(); err == nil {
-			configDir = filepath.Join(u.HomeDir, ".config", "nginx")
+			configDir = filepath.Join(u.HomeDir, ".config", "ngc")
 		}
 	}
 
@@ -36,6 +36,10 @@ func init() {
 	if siteRootDir == "" {
 		siteRootDir = "/opt/local/www"
 	}
+
+	createDir(configDir, 0700)
+	createDir(siteConfDir, 0700)
+	createDir(siteRootDir, 0755)
 }
 
 type userConfig struct {

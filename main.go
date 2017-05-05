@@ -9,7 +9,9 @@ import (
 )
 
 var (
-	commands   = []*command{}
+	commands = []*command{
+		cmdNew,
+	}
 	exitMu     sync.Mutex
 	exitStatus = 0
 )
