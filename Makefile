@@ -1,10 +1,10 @@
 RELEASES=bin/ngc-darwin-amd64 \
-	#  bin/ngc-linux-amd64 \
-	#  bin/ngc-linux-386 \
-	#  bin/ngc-linux-arm \
-	#  bin/ngc-windows-amd64.exe \
-	#  bin/ngc-windows-386.exe \
-	#  bin/ngc-solaris-amd64 
+	 bin/ngc-linux-amd64 \
+	 bin/ngc-linux-386 \
+	 bin/ngc-linux-arm \
+	 bin/ngc-windows-amd64.exe \
+	 bin/ngc-windows-386.exe \
+	 bin/ngc-solaris-amd64 
 
 all: $(RELEASES)
 

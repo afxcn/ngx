@@ -16,12 +16,10 @@ Create an new empty Site or reinitialize an existing site.
 
 `,
 	}
-
-	force bool
 )
 
 func init() {
-	cmdNew.flag.BoolVar(&force, "f", false, "domain of site to create.")
+
 }
 
 func runNew(args []string) {
@@ -32,14 +30,12 @@ func runNew(args []string) {
 	siteConfData, err := siteRC(siteConfFile)
 
 	if err != nil {
-		os.Remove(siteConfFile)
 		fatalf("read site conf failure: %v", err)
 	}
 
 	siteIndexData, err := siteRC(siteIndexFile)
 
 	if err != nil {
-		os.Remove(siteIndexFile)
 		fatalf("read site index failure: %v", err)
 	}
 
@@ -83,6 +79,14 @@ func runNew(args []string) {
 
 		if err := writeTpl(siteIndexTpl, domainIndexPath, data); err != nil {
 			fatalf("create domain index failure: %v", err)
+		}
+
+		if err := createMockSSL(domain, domainConfPath); err != nil {
+			fatalf("create mock ssl failure: %v", err)
+		}
+
+		if err := reloadNginx(); err != nil {
+			fatalf("reload nginx failure: %v", err)
 		}
 	}
 }

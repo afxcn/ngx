@@ -13,8 +13,12 @@ import (
 const (
 	settingFile   = "setting.json"
 	siteConfFile  = "site.conf"
+	siteOcspFile  = "ocsp.pem"
 	siteIndexFile = "index.html"
-	siteRawURL    = "https://raw.githubusercontent.com/afxcn/ngx-cli/master/"
+	siteRawURL    = "https://raw.githubusercontent.com/afxcn/ngx-cli/master/rc/"
+
+	rsaPrivateKey = "RSA PRIVATE KEY"
+	ecPrivateKey  = "EC PRIVATE KEY"
 )
 
 var configDir string
@@ -99,7 +103,7 @@ func siteRC(filename string) ([]byte, error) {
 	fp := filepath.Join(rcDir, filename)
 
 	if _, err := os.Stat(fp); os.IsNotExist(err) {
-		url := siteRawURL + "rc/" + filename
+		url := siteRawURL + filename
 
 		fn, err := os.OpenFile(fp, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
 
@@ -120,6 +124,8 @@ func siteRC(filename string) ([]byte, error) {
 		_, err = io.Copy(fn, resp.Body)
 
 		if err != nil {
+			fn.Close()
+			os.Remove(fp)
 			return nil, err
 		}
 	}
