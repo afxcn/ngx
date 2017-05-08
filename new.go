@@ -82,12 +82,18 @@ func runNew(args []string) {
 			fatalf("create domain index failure: %v", err)
 		}
 
-		if err := reloadNginx(); err != nil {
+		if err := nginxReload(); err != nil {
 			fatalf("reload nginx failure: %v", err)
 		}
 
 		if err := parseSiteConfSSL(domain, domainConfPath); err != nil {
 			fatalf("parse site conf ssl failure: %v", err)
+		}
+
+		data.WithSSL = true
+
+		if err := writeTpl(siteConfTpl, domainConfPath, data); err != nil {
+			fatalf("create domain conf with ssl failure: %v", err)
 		}
 	}
 }
