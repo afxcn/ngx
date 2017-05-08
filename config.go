@@ -94,13 +94,13 @@ func writeConfig(uc *userConfig) error {
 }
 
 func siteRC(filename string) ([]byte, error) {
-	rcDir := filepath.Join(configDir, "rc")
+	dir := filepath.Join(configDir, "rc")
 
-	if err := createDir(rcDir, 0700); err != nil {
+	if err := createDir(dir, 0700); err != nil {
 		return nil, err
 	}
 
-	fp := filepath.Join(rcDir, filename)
+	fp := filepath.Join(dir, filename)
 
 	if _, err := os.Stat(fp); os.IsNotExist(err) {
 		url := siteRawURL + filename
