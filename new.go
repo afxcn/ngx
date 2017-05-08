@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"path/filepath"
 )
@@ -74,11 +75,13 @@ func runNew(args []string) {
 			WithSSL:  false,
 		}
 
-		if err := writeTpl(siteConfTpl, domainConfPath, data); err != nil {
+		created, err := writeTpl(siteConfTpl, domainConfPath, data)
+
+		if err != nil {
 			fatalf("create domain conf failure: %v", err)
 		}
 
-		if err := writeTpl(siteIndexTpl, domainIndexPath, data); err != nil {
+		if _, err := writeTpl(siteIndexTpl, domainIndexPath, data); err != nil {
 			fatalf("create domain index failure: %v", err)
 		}
 
@@ -86,14 +89,21 @@ func runNew(args []string) {
 			fatalf("reload nginx failure: %v", err)
 		}
 
-		if err := parseSiteConfSSL(domain, domainConfPath); err != nil {
-			fatalf("parse site conf ssl failure: %v", err)
-		}
+		if created {
 
-		data.WithSSL = true
+			data.WithSSL = true
 
-		if err := writeTpl(siteConfTpl, domainConfPath, data); err != nil {
-			fatalf("create domain conf with ssl failure: %v", err)
+			if err := editTpl(siteConfTpl, domainConfPath, data); err != nil {
+				fatalf("edit domain conf with ssl failure: %v", err)
+			}
+
+			conf, err := parseSiteConf(domain, domainConfPath)
+
+			if err != nil {
+				fatalf("parse site conf ssl failure: %v", err)
+			}
+
+			fmt.Println(conf)
 		}
 	}
 }

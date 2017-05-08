@@ -9,21 +9,29 @@ var (
 	confSslRegex = regexp.MustCompile(`(ssl_certificate|ssl_certificate_key|ssl_session_ticket_key|ssl_dhparam|ssl_trusted_certificate)\s+([a-z0-9_\-\.\/]+?);`)
 )
 
-func parseSiteConfSSL(domain string, confFilename string) error {
+type ngcCertificate struct {
+	privkey   string
+	fullchain string
+}
+
+type ngcSiteConf struct {
+	Certificates          []ngcCertificate
+	SslSessionTicketKey   string
+	SslDHparam            string
+	SslTrustedCertificate string
+}
+
+func parseSiteConf(domain string, confFilename string) (*ngcSiteConf, error) {
 	text, err := ioutil.ReadFile(confFilename)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	matches := confSslRegex.FindAllStringSubmatch(string(text), -1)
 
-	type cert struct {
-		privkey   string
-		fullchain string
-	}
-
-	var c *cert
+	var conf = &ngcSiteConf{}
+	var cert *ngcCertificate
 
 	for _, match := range matches {
 
@@ -32,34 +40,35 @@ func parseSiteConfSSL(domain string, confFilename string) error {
 
 			switch key {
 			case "ssl_certificate":
-				if c == nil {
-					c = &cert{
+				if cert == nil {
+					cert = &ngcCertificate{
 						fullchain: value,
 					}
 				} else {
-					c.fullchain = value
-					////
-					c = nil
+					cert.fullchain = value
+					conf.Certificates = append(conf.Certificates, *cert)
+					cert = nil
 				}
 			case "ssl_certificate_key":
-				if c == nil {
-					c = &cert{
+				if cert == nil {
+					cert = &ngcCertificate{
 						privkey: value,
 					}
 				} else {
-					c.privkey = value
-					////
-					c = nil
+					cert.privkey = value
+					conf.Certificates = append(conf.Certificates, *cert)
+					cert = nil
 				}
 			case "ssl_session_ticket_key":
-
+				conf.SslSessionTicketKey = value
 			case "ssl_dhparam":
-
+				conf.SslDHparam = value
 			case "ssl_trusted_certificate":
-
+				conf.SslTrustedCertificate = value
 			}
 		}
+
 	}
 
-	return nil
+	return conf, nil
 }
