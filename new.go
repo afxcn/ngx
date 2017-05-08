@@ -2,7 +2,6 @@ package main
 
 import (
 	"html/template"
-	"os"
 	"path/filepath"
 )
 
@@ -68,9 +67,11 @@ func runNew(args []string) {
 		data := struct {
 			SiteRoot string
 			Domain   string
+			WithSSL  bool
 		}{
 			SiteRoot: siteRootDir,
 			Domain:   domain,
+			WithSSL:  false,
 		}
 
 		if err := writeTpl(siteConfTpl, domainConfPath, data); err != nil {
@@ -81,31 +82,12 @@ func runNew(args []string) {
 			fatalf("create domain index failure: %v", err)
 		}
 
-		if err := createMockSSL(domain, domainConfPath); err != nil {
-			fatalf("create mock ssl failure: %v", err)
-		}
-
 		if err := reloadNginx(); err != nil {
 			fatalf("reload nginx failure: %v", err)
 		}
-	}
-}
 
-func writeTpl(tpl *template.Template, fp string, data interface{}) error {
-	if _, err := os.Stat(fp); os.IsNotExist(err) {
-		fn, err := os.OpenFile(fp, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
-
-		if err != nil {
-			return err
+		if err := parseSiteConfSSL(domain, domainConfPath); err != nil {
+			fatalf("parse site conf ssl failure: %v", err)
 		}
-
-		defer fn.Close()
-
-		if err := tpl.Execute(fn, data); err != nil {
-			return err
-		}
-
 	}
-
-	return nil
 }
