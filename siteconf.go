@@ -17,7 +17,7 @@ type ngxCertificate struct {
 type ngxSiteConf struct {
 	Certificates          []ngxCertificate
 	SslSessionTicketKey   string
-	SslDHparam            string
+	SslDHParam            string
 	SslTrustedCertificate string
 }
 
@@ -62,7 +62,7 @@ func parseSiteConf(domain string, confFilename string) (*ngxSiteConf, error) {
 			case "ssl_session_ticket_key":
 				conf.SslSessionTicketKey = value
 			case "ssl_dhparam":
-				conf.SslDHparam = value
+				conf.SslDHParam = value
 			case "ssl_trusted_certificate":
 				conf.SslTrustedCertificate = value
 			}

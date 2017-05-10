@@ -108,8 +108,43 @@ func runNew(args []string) {
 				fatalf("parse site conf ssl failure: %v", err)
 			}
 
-			if _, err := os.Stat(conf.SslDHparam); os.IsNotExist(err) {
-				////
+			if _, err := os.Stat(conf.SslDHParam); os.IsNotExist(err) {
+				if err := createFileDir(conf.SslDHParam, 0700); err != nil {
+					fatalf("create DHParam dir failure: %v", err)
+				}
+				filename := filepath.Base(conf.SslDHParam)
+				data, err := siteResource(filename)
+				if err != nil {
+					fatalf("read DHParam failure: %v", err)
+				}
+
+				ioutil.WriteFile(conf.SslDHParam, data, 0600)
+			}
+
+			if _, err := os.Stat(conf.SslSessionTicketKey); os.IsNotExist(err) {
+				if err := createFileDir(conf.SslSessionTicketKey, 0700); err != nil {
+					fatalf("create Session Ticket Key dir failure: %v", err)
+				}
+				filename := filepath.Base(conf.SslSessionTicketKey)
+				data, err := siteResource(filename)
+				if err != nil {
+					fatalf("read Session Ticket Key failure: %v", err)
+				}
+
+				ioutil.WriteFile(conf.SslSessionTicketKey, data, 0600)
+			}
+
+			if _, err := os.Stat(conf.SslTrustedCertificate); os.IsNotExist(err) {
+				if err := createFileDir(conf.SslTrustedCertificate, 0700); err != nil {
+					fatalf("create ocsp dir failure: %v", err)
+				}
+				filename := filepath.Base(conf.SslTrustedCertificate)
+				data, err := siteResource(filename)
+				if err != nil {
+					fatalf("read ocsp failure: %v", err)
+				}
+
+				ioutil.WriteFile(conf.SslTrustedCertificate, data, 0600)
 			}
 
 			accountKey, err := anyKey(filepath.Join(configDir, accountKeyFile))
@@ -119,8 +154,7 @@ func runNew(args []string) {
 			}
 
 			client := &acme.Client{
-				Key:          accountKey,
-				DirectoryURL: "https://acme-staging.api.letsencrypt.org/directory",
+				Key: accountKey,
 			}
 
 			if _, err := readConfig(); os.IsNotExist(err) {
@@ -187,6 +221,11 @@ func runNew(args []string) {
 				}
 
 			}
+
+			if err := nginxReload(); err != nil {
+				fatalf("reload nginx failure: %v", err)
+			}
+
 		}
 	}
 }
