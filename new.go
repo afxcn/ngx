@@ -27,13 +27,13 @@ func runNew(args []string) {
 		fatalf("no domain specified")
 	}
 
-	siteConfData, err := siteRC(siteConfFile)
+	siteConfData, err := siteResource(siteConfFile)
 
 	if err != nil {
 		fatalf("read site conf failure: %v", err)
 	}
 
-	siteIndexData, err := siteRC(siteIndexFile)
+	siteIndexData, err := siteResource(siteIndexFile)
 
 	if err != nil {
 		fatalf("read site index failure: %v", err)

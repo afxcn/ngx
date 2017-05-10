@@ -2,9 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"io"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -15,26 +13,32 @@ const (
 	siteConfFile  = "site.conf"
 	siteOcspFile  = "ocsp.pem"
 	siteIndexFile = "index.html"
-	siteRawURL    = "https://raw.githubusercontent.com/afxcn/ngx-cli/master/rc/"
 
 	rsaPrivateKey = "RSA PRIVATE KEY"
 	ecPrivateKey  = "EC PRIVATE KEY"
 )
 
-var configDir string
-var siteConfDir string
-var siteRootDir string
+var (
+	configDir       string
+	siteResourceURL string
+	siteConfDir     string
+	siteRootDir     string
+)
 
 func init() {
 	configDir = os.Getenv("NGX_CONFIG")
+	siteResourceURL = os.Getenv("NGX_SITE_RESOURCE")
 	siteConfDir = os.Getenv("NGX_SITE_CONFIG")
 	siteRootDir = os.Getenv("NGX_SITE_ROOT")
 
 	if configDir == "" {
-
 		if u, err := user.Current(); err == nil {
-			configDir = filepath.Join(u.HomeDir, ".config", "ngx")
+			configDir = filepath.Join(u.HomeDir, ".config", "ngxpkg")
 		}
+	}
+
+	if siteResourceURL == "" {
+		siteResourceURL = "https://raw.githubusercontent.com/afxcn/ngxpkg/master/rc/"
 	}
 
 	if siteConfDir == "" {
@@ -91,50 +95,4 @@ func writeConfig(uc *userConfig) error {
 		return err
 	}
 	return ioutil.WriteFile(filepath.Join(configDir, settingFile), b, 0600)
-}
-
-func siteRC(filename string) ([]byte, error) {
-	dir := filepath.Join(configDir, "rc")
-
-	if err := createDir(dir, 0700); err != nil {
-		return nil, err
-	}
-
-	fp := filepath.Join(dir, filename)
-
-	if _, err := os.Stat(fp); os.IsNotExist(err) {
-		url := siteRawURL + filename
-
-		fn, err := os.OpenFile(fp, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
-
-		if err != nil {
-			return nil, err
-		}
-
-		defer fn.Close()
-
-		resp, err := http.Get(url)
-
-		if err != nil {
-			return nil, err
-		}
-
-		defer resp.Body.Close()
-
-		_, err = io.Copy(fn, resp.Body)
-
-		if err != nil {
-			fn.Close()
-			os.Remove(fp)
-			return nil, err
-		}
-	}
-
-	bytes, err := ioutil.ReadFile(fp)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return bytes, nil
 }
