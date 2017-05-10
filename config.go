@@ -6,13 +6,16 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+
+	"golang.org/x/crypto/acme"
 )
 
 const (
-	settingFile   = "setting.json"
-	siteConfFile  = "site.conf"
-	siteOcspFile  = "ocsp.pem"
-	siteIndexFile = "index.html"
+	accountFile    = "account.json"
+	accountKeyFile = "account.ecdsa.pem"
+	siteConfFile   = "site.conf"
+	siteOcspFile   = "ocsp.pem"
+	siteIndexFile  = "index.html"
 
 	rsaPrivateKey = "RSA PRIVATE KEY"
 	ecPrivateKey  = "EC PRIVATE KEY"
@@ -63,7 +66,7 @@ func init() {
 }
 
 type userConfig struct {
-	Server []serverConfig
+	acme.Account
 }
 
 type serverConfig struct {
@@ -74,7 +77,7 @@ type serverConfig struct {
 }
 
 func readConfig() (*userConfig, error) {
-	b, err := ioutil.ReadFile(filepath.Join(configDir, settingFile))
+	b, err := ioutil.ReadFile(filepath.Join(configDir, accountFile))
 	if err != nil {
 		return nil, err
 	}
@@ -94,5 +97,5 @@ func writeConfig(uc *userConfig) error {
 	if err := os.MkdirAll(configDir, 0700); err != nil {
 		return err
 	}
-	return ioutil.WriteFile(filepath.Join(configDir, settingFile), b, 0600)
+	return ioutil.WriteFile(filepath.Join(configDir, accountFile), b, 0600)
 }

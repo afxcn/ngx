@@ -1,15 +1,24 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"crypto/rand"
+	"crypto/x509"
+	"crypto/x509/pkix"
+	"encoding/pem"
 	"html/template"
+	"io/ioutil"
+	"os"
 	"path/filepath"
+	"time"
+
+	"golang.org/x/crypto/acme"
 )
 
 var (
 	cmdNew = &command{
 		run:       runNew,
-		UsageLine: "new [-f force] domain [domain ...]",
+		UsageLine: "new domain [domain ...]",
 		Short:     "Create an new empty Site or reinitialize an existing site",
 		Long: `
 Create an new empty Site or reinitialize an existing site.
@@ -17,10 +26,6 @@ Create an new empty Site or reinitialize an existing site.
 `,
 	}
 )
-
-func init() {
-
-}
 
 func runNew(args []string) {
 	if len(args) == 0 {
@@ -103,7 +108,85 @@ func runNew(args []string) {
 				fatalf("parse site conf ssl failure: %v", err)
 			}
 
-			fmt.Println(conf)
+			if _, err := os.Stat(conf.SslDHparam); os.IsNotExist(err) {
+				////
+			}
+
+			accountKey, err := anyKey(filepath.Join(configDir, accountKeyFile))
+
+			if err != nil {
+				fatalf("account key: %v", err)
+			}
+
+			client := &acme.Client{
+				Key:          accountKey,
+				DirectoryURL: "https://acme-staging.api.letsencrypt.org/directory",
+			}
+
+			if _, err := readConfig(); os.IsNotExist(err) {
+				if err := register(client); err != nil {
+					fatalf("register failure: %v", err)
+				}
+			} else if err != nil {
+				fatalf("read user config failure: %v", err)
+			}
+
+			req := &x509.CertificateRequest{
+				Subject: pkix.Name{CommonName: domain},
+			}
+
+			dnsNames := []string{
+				domain,
+				"www." + domain,
+			}
+
+			for _, cert := range conf.Certificates {
+
+				if err := createFileDir(cert.privkey, 0700); err != nil {
+					fatalf("create privkey dir failure: %v", err)
+				}
+
+				privkey, err := anyKey(cert.privkey)
+
+				if err != nil {
+					fatalf("cert key: %v", err)
+				}
+
+				req.DNSNames = dnsNames
+
+				csr, err := x509.CreateCertificateRequest(rand.Reader, req, privkey)
+
+				if err != nil {
+					fatalf("csr: %v", err)
+				}
+
+				for _, dnsName := range dnsNames {
+					ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+
+					if err := authz(ctx, client, domainPublicDir, dnsName); err != nil {
+						fatalf("authz %s: %v", dnsName, err)
+					}
+					cancel()
+				}
+
+				ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
+				defer cancel()
+				certs, curl, err := client.CreateCert(ctx, csr, certExpiry, certBundle)
+				if err != nil {
+					fatalf("cert: %v", err)
+				}
+				logf("cert url: %s", curl)
+				var pemcert []byte
+				for _, b := range certs {
+					b = pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: b})
+					pemcert = append(pemcert, b...)
+				}
+
+				if err := ioutil.WriteFile(cert.fullchain, pemcert, 0644); err != nil {
+					fatalf("write cert: %v", err)
+				}
+
+			}
 		}
 	}
 }
