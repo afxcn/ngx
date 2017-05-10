@@ -12,15 +12,15 @@ import (
 )
 
 var (
-	usageTemplate = `ngc is a cli tool for nginx
+	usageTemplate = `ngx is a cli tool for nginx
 Usage:
-	ngc command [arguments]
+	ngx command [arguments]
 
 The commands are:
 {{range .}}{{if .Runnable}}
 	{{.Name | printf "%-11s"}} {{.Short}}{{end}}{{end}}
 
-Use "ngc help [command]" for more information about a command.
+Use "ngx help [command]" for more information about a command.
 
 `
 )
@@ -83,14 +83,14 @@ func help(args []string) {
 		return
 	}
 	if len(args) != 1 {
-		fatalf("usage: ngc help command\n\nToo many arguments given.\n")
+		fatalf("usage: ngx help command\n\nToo many arguments given.\n")
 	}
 
 	arg := args[0]
 	for _, cmd := range commands {
 		if cmd.Name() == arg {
 			if cmd.Runnable() {
-				fmt.Fprintf(os.Stdout, "usage: ngc %s\n", cmd.UsageLine)
+				fmt.Fprintf(os.Stdout, "usage: ngx %s\n", cmd.UsageLine)
 			}
 			data := struct {
 				ConfigDir    string
@@ -106,5 +106,5 @@ func help(args []string) {
 		}
 	}
 
-	fatalf("Unknown help topic %q. Run 'ngc help'.\n", arg)
+	fatalf("Unknown help topic %q. Run 'ngx help'.\n", arg)
 }

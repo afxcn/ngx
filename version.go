@@ -9,8 +9,8 @@ var (
 	cmdVersion = &command{
 		run:       runVersion,
 		UsageLine: "version",
-		Short:     "display ngc version",
-		Long:      "display ngc version and build info.\n",
+		Short:     "display ngx version",
+		Long:      "display ngx version and build info.\n",
 	}
 )
 

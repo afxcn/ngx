@@ -26,14 +26,14 @@ var siteConfDir string
 var siteRootDir string
 
 func init() {
-	configDir = os.Getenv("NGC_CONFIG")
-	siteConfDir = os.Getenv("NGC_SITE_CONFIG")
-	siteRootDir = os.Getenv("NGC_SITE_ROOT")
+	configDir = os.Getenv("NGX_CONFIG")
+	siteConfDir = os.Getenv("NGX_SITE_CONFIG")
+	siteRootDir = os.Getenv("NGX_SITE_ROOT")
 
 	if configDir == "" {
 
 		if u, err := user.Current(); err == nil {
-			configDir = filepath.Join(u.HomeDir, ".config", "ngc")
+			configDir = filepath.Join(u.HomeDir, ".config", "ngx")
 		}
 	}
 
