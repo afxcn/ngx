@@ -35,25 +35,25 @@ func runNew(args []string) {
 	siteConfData, err := siteResource(siteConfFile)
 
 	if err != nil {
-		fatalf("read site conf failure: %v", err)
+		fatalf("read conf: %v", err)
 	}
 
 	siteIndexData, err := siteResource(siteIndexFile)
 
 	if err != nil {
-		fatalf("read site index failure: %v", err)
+		fatalf("read index: %v", err)
 	}
 
 	siteConfTpl, err := template.New("siteConf").Parse(string(siteConfData))
 
 	if err != nil {
-		fatalf("parse site conf template failure: %v", err)
+		fatalf("parse conf: %v", err)
 	}
 
 	siteIndexTpl, err := template.New("siteIndex").Parse(string(siteIndexData))
 
 	if err != nil {
-		fatalf("parse site index template failure: %v", err)
+		fatalf("parse index: %v", err)
 	}
 
 	for _, domain := range args {
@@ -63,11 +63,11 @@ func runNew(args []string) {
 		domainIndexPath := filepath.Join(domainPublicDir, siteIndexFile)
 
 		if err := createDir(domainRootDir, 0755); err != nil {
-			fatalf("create domain root dir failure: %v", err)
+			fatalf("create root dir: %v", err)
 		}
 
 		if err := createDir(domainPublicDir, 0755); err != nil {
-			fatalf("create domain public dir failure: %v", err)
+			fatalf("create public dir: %v", err)
 		}
 
 		data := struct {
@@ -83,15 +83,15 @@ func runNew(args []string) {
 		created, err := writeTpl(siteConfTpl, domainConfPath, data)
 
 		if err != nil {
-			fatalf("create domain conf failure: %v", err)
+			fatalf("create conf: %v", err)
 		}
 
 		if _, err := writeTpl(siteIndexTpl, domainIndexPath, data); err != nil {
-			fatalf("create domain index failure: %v", err)
+			fatalf("create index: %v", err)
 		}
 
 		if err := nginxReload(); err != nil {
-			fatalf("reload nginx failure: %v", err)
+			fatalf("nginx: %v", err)
 		}
 
 		if created {
@@ -99,23 +99,22 @@ func runNew(args []string) {
 			data.WithSSL = true
 
 			if err := editTpl(siteConfTpl, domainConfPath, data); err != nil {
-				fatalf("edit domain conf with ssl failure: %v", err)
+				fatalf("edit conf: %v", err)
 			}
 
 			conf, err := parseSiteConf(domain, domainConfPath)
 
 			if err != nil {
-				fatalf("parse site conf ssl failure: %v", err)
+				fatalf("parse conf: %v", err)
 			}
 
 			if _, err := os.Stat(conf.SslDHParam); os.IsNotExist(err) {
 				if err := createFileDir(conf.SslDHParam, 0700); err != nil {
-					fatalf("create DHParam dir failure: %v", err)
+					fatalf("dhparam dir: %v", err)
 				}
-				filename := filepath.Base(conf.SslDHParam)
-				data, err := siteResource(filename)
+				data, err := siteResource(filepath.Base(conf.SslDHParam))
 				if err != nil {
-					fatalf("read DHParam failure: %v", err)
+					fatalf("dhparam: %v", err)
 				}
 
 				ioutil.WriteFile(conf.SslDHParam, data, 0600)
@@ -123,12 +122,11 @@ func runNew(args []string) {
 
 			if _, err := os.Stat(conf.SslSessionTicketKey); os.IsNotExist(err) {
 				if err := createFileDir(conf.SslSessionTicketKey, 0700); err != nil {
-					fatalf("create Session Ticket Key dir failure: %v", err)
+					fatalf("ticket Key dir: %v", err)
 				}
-				filename := filepath.Base(conf.SslSessionTicketKey)
-				data, err := siteResource(filename)
+				data, err := siteResource(filepath.Base(conf.SslSessionTicketKey))
 				if err != nil {
-					fatalf("read Session Ticket Key failure: %v", err)
+					fatalf("ticket Key: %v", err)
 				}
 
 				ioutil.WriteFile(conf.SslSessionTicketKey, data, 0600)
@@ -138,8 +136,7 @@ func runNew(args []string) {
 				if err := createFileDir(conf.SslTrustedCertificate, 0700); err != nil {
 					fatalf("create ocsp dir failure: %v", err)
 				}
-				filename := filepath.Base(conf.SslTrustedCertificate)
-				data, err := siteResource(filename)
+				data, err := siteResource(filepath.Base(conf.SslTrustedCertificate))
 				if err != nil {
 					fatalf("read ocsp failure: %v", err)
 				}
@@ -154,15 +151,16 @@ func runNew(args []string) {
 			}
 
 			client := &acme.Client{
-				Key: accountKey,
+				Key:          accountKey,
+				DirectoryURL: directoryURL,
 			}
 
 			if _, err := readConfig(); os.IsNotExist(err) {
 				if err := register(client); err != nil {
-					fatalf("register failure: %v", err)
+					fatalf("register: %v", err)
 				}
 			} else if err != nil {
-				fatalf("read user config failure: %v", err)
+				fatalf("user config: %v", err)
 			}
 
 			req := &x509.CertificateRequest{
@@ -177,13 +175,13 @@ func runNew(args []string) {
 			for _, cert := range conf.Certificates {
 
 				if err := createFileDir(cert.privkey, 0700); err != nil {
-					fatalf("create privkey dir failure: %v", err)
+					fatalf("create privkey dir: %v", err)
 				}
 
 				privkey, err := anyKey(cert.privkey)
 
 				if err != nil {
-					fatalf("cert key: %v", err)
+					fatalf("privkey: %v", err)
 				}
 
 				req.DNSNames = dnsNames
@@ -205,11 +203,12 @@ func runNew(args []string) {
 
 				ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
 				defer cancel()
-				certs, curl, err := client.CreateCert(ctx, csr, certExpiry, certBundle)
+				certs, _, err := client.CreateCert(ctx, csr, certExpiry, certBundle)
+
 				if err != nil {
 					fatalf("cert: %v", err)
 				}
-				logf("cert url: %s", curl)
+
 				var pemcert []byte
 				for _, b := range certs {
 					b = pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: b})
@@ -223,7 +222,7 @@ func runNew(args []string) {
 			}
 
 			if err := nginxReload(); err != nil {
-				fatalf("reload nginx failure: %v", err)
+				fatalf("nginx: %v", err)
 			}
 
 		}

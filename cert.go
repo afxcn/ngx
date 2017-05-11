@@ -22,7 +22,7 @@ import (
 )
 
 var (
-	certExpiry = 365 * 12 * time.Hour
+	certExpiry = 365 * 24 * time.Hour
 	certBundle = true
 )
 
@@ -35,6 +35,7 @@ func register(client *acme.Client) error {
 	a, err := client.Register(ctx, &uc.Account, prompt)
 
 	if err != nil {
+		fmt.Println("====================")
 		return err
 	}
 

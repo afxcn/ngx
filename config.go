@@ -23,6 +23,7 @@ const (
 
 var (
 	configDir       string
+	directoryURL    string
 	siteResourceURL string
 	siteConfDir     string
 	siteRootDir     string
@@ -30,6 +31,7 @@ var (
 
 func init() {
 	configDir = os.Getenv("NGX_CONFIG")
+	directoryURL = os.Getenv("NGX_DIRECTORY_URL")
 	siteResourceURL = os.Getenv("NGX_SITE_RESOURCE")
 	siteConfDir = os.Getenv("NGX_SITE_CONFIG")
 	siteRootDir = os.Getenv("NGX_SITE_ROOT")
@@ -38,6 +40,12 @@ func init() {
 		if u, err := user.Current(); err == nil {
 			configDir = filepath.Join(u.HomeDir, ".config", "ngxpkg")
 		}
+	}
+
+	if directoryURL == "" {
+		// https://acme-v01.api.letsencrypt.org/directory
+		// https://acme-staging.api.letsencrypt.org/directory
+		directoryURL = "https://acme-staging.api.letsencrypt.org/directory"
 	}
 
 	if siteResourceURL == "" {
@@ -53,15 +61,15 @@ func init() {
 	}
 
 	if err := createDir(configDir, 0700); err != nil {
-		fatalf("create configDir failure: %v", err)
+		fatalf("config dir: %v", err)
 	}
 
 	if err := createDir(siteConfDir, 0700); err != nil {
-		fatalf("create siteConfDir failure: %v", err)
+		fatalf("site conf dir: %v", err)
 	}
 
 	if err := createDir(siteRootDir, 0755); err != nil {
-		fatalf("create siteRootDir failure: %v", err)
+		fatalf("site root dir: %v", err)
 	}
 }
 
