@@ -45,7 +45,7 @@ func init() {
 	if directoryURL == "" {
 		// https://acme-v01.api.letsencrypt.org/directory
 		// https://acme-staging.api.letsencrypt.org/directory
-		directoryURL = "https://acme-staging.api.letsencrypt.org/directory"
+		directoryURL = "https://acme-v01.api.letsencrypt.org/directory"
 	}
 
 	if siteResourceURL == "" {
