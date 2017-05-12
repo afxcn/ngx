@@ -49,7 +49,7 @@ func init() {
 	}
 
 	if siteResourceURL == "" {
-		siteResourceURL = "https://raw.githubusercontent.com/afxcn/ngxpkg/master/rc/"
+		siteResourceURL = "https://ngxpkg.com/rc/"
 	}
 
 	if siteConfDir == "" {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"io"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -9,6 +9,10 @@ import (
 )
 
 func siteResource(filename string) ([]byte, error) {
+	if filename == "" {
+		return nil, errors.New("ngx: invalid resource filename")
+	}
+
 	dir := filepath.Join(configDir, "rc")
 
 	if err := createDir(dir, 0700); err != nil {
@@ -20,14 +24,6 @@ func siteResource(filename string) ([]byte, error) {
 	if _, err := os.Stat(fp); os.IsNotExist(err) {
 		url := siteResourceURL + filename
 
-		fn, err := os.OpenFile(fp, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
-
-		if err != nil {
-			return nil, err
-		}
-
-		defer fn.Close()
-
 		resp, err := http.Get(url)
 
 		if err != nil {
@@ -36,13 +32,20 @@ func siteResource(filename string) ([]byte, error) {
 
 		defer resp.Body.Close()
 
-		_, err = io.Copy(fn, resp.Body)
+		bytes, err := ioutil.ReadAll(resp.Body)
 
 		if err != nil {
-			fn.Close()
-			os.Remove(fp)
 			return nil, err
 		}
+
+		if err := ioutil.WriteFile(fp, bytes, 0600); err != nil {
+			return nil, err
+		}
+
+		return bytes, nil
+
+	} else if err != nil {
+		return nil, err
 	}
 
 	bytes, err := ioutil.ReadFile(fp)
@@ -52,4 +55,27 @@ func siteResource(filename string) ([]byte, error) {
 	}
 
 	return bytes, nil
+}
+
+func writeResource(filename string) error {
+	if filename == "" {
+		return errors.New("ngx: invalid filename")
+	}
+
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		if err := initDir(filename, 0700); err != nil {
+			return err
+		}
+
+		data, err := siteResource(filepath.Base(filename))
+
+		if err != nil {
+			return err
+		}
+
+		return ioutil.WriteFile(filename, data, 0600)
+
+	}
+
+	return nil
 }
