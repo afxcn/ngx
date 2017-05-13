@@ -2,10 +2,7 @@
 
 A cli tool for nginx
 
-## working on it, please don't use it at production.
-
-
-Create a new site with domains test1.com, test2.com :
+## Create a new site with domains test1.com, test2.com :
 
 ```bash
 ngx new test1.com test2.com
