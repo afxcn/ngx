@@ -10,7 +10,7 @@ A cli tool for nginx
 * NGX_SITE_CONFIG = /etc/nginx/conf.d
 * NGX_SITE_ROOT = /opt/local/www
 
-## Create a new site with domains test1.com, test2.com.
+## Create new sites with domains test1.com, test2.com ...
 
 ```bash
 ngx new test1.com test2.com
@@ -28,7 +28,9 @@ and create sites:
 
 and apply ssl Certificates for sites.
 
-### Notice, replace the files with yours after create new site.
+## Notice.
+
+please replace the files with yours after create new site.
 
 * dhparam.pem
 * ticket.pem
