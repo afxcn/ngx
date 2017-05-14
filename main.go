@@ -11,6 +11,7 @@ import (
 var (
 	commands = []*command{
 		cmdNew,
+		cmdReNew,
 	}
 	exitMu     sync.Mutex
 	exitStatus = 0

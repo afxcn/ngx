@@ -11,7 +11,8 @@ func createDir(dir string, perm os.FileMode) error {
 		if err := os.MkdirAll(dir, perm); err != nil {
 			return err
 		}
-	} else {
+
+	} else if err != nil { // other err type
 		return err
 	}
 

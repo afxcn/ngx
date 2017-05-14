@@ -2,7 +2,15 @@
 
 A cli tool for nginx
 
-## Create a new site with domains test1.com, test2.com :
+## Default Env
+
+* NGX_CONFIG = 〜／.config／ngxpkg
+* NGX_DIRECTORY_URL = https://acme-v01.api.letsencrypt.org/directory
+* NGX_SITE_RESOURCE = https://rc.ngxpkg.com/
+* NGX_SITE_CONFIG = /etc/nginx/conf.d
+* NGX_SITE_ROOT = /opt/local/www
+
+## Create a new site with domains test1.com, test2.com.
 
 ```bash
 ngx new test1.com test2.com
@@ -20,10 +28,7 @@ and create sites:
 
 and apply ssl Certificates for sites.
 
-## Env
+### Notice, replace the files with yours after create new site.
 
-* NGX_CONFIG = 〜／.config／ngxpkg
-* NGX_DIRECTORY_URL = https://acme-v01.api.letsencrypt.org/directory
-* NGX_SITE_RESOURCE = https://ngxpkg.com/rc/
-* NGX_SITE_CONFIG = /etc/nginx/conf.d
-* NGX_SITE_ROOT = /opt/local/www
+* dhparam.pem
+* ticket.pem
