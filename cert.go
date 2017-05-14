@@ -75,7 +75,7 @@ func authz(ctx context.Context, client *acme.Client, domainPublic string, domain
 
 	path := filepath.Join(domainPublic, client.HTTP01ChallengePath(chal.Token))
 
-	if err := initDir(path, 0755); err != nil {
+	if err := sameDir(path, 0755); err != nil {
 		return err
 	}
 

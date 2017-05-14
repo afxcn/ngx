@@ -18,7 +18,7 @@ func createDir(dir string, perm os.FileMode) error {
 	return nil
 }
 
-func initDir(filename string, perm os.FileMode) error {
+func sameDir(filename string, perm os.FileMode) error {
 	dir := filepath.Dir(filename)
 	return createDir(dir, perm)
 }

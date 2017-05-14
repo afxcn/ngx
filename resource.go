@@ -63,7 +63,7 @@ func writeResource(filename string) error {
 	}
 
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
-		if err := initDir(filename, 0700); err != nil {
+		if err := sameDir(filename, 0700); err != nil {
 			return err
 		}
 

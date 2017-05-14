@@ -10,7 +10,10 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"reflect"
 	"time"
+
+	"net"
 
 	"golang.org/x/crypto/acme"
 )
@@ -130,6 +133,12 @@ func runNew(args []string) {
 
 	for _, domain := range domains {
 
+		ipArr, err := net.LookupIP(domain)
+
+		if err != nil {
+			fatalf("%s lookup: %v", domain, err)
+		}
+
 		domainConfPath := filepath.Join(siteConfDir, domain+".conf")
 		domainRootDir := filepath.Join(siteRootDir, domain)
 		domainPublicDir := filepath.Join(domainRootDir, "public")
@@ -172,12 +181,20 @@ func runNew(args []string) {
 
 		dnsNames := []string{
 			domain,
-			"www." + domain,
+		}
+
+		wwwDomain := "www." + domain
+
+		if wwwIPArr, err := net.LookupIP(wwwDomain); err == nil {
+
+			if reflect.DeepEqual(ipArr, wwwIPArr) {
+				dnsNames = append(dnsNames, wwwDomain)
+			}
 		}
 
 		for _, cert := range conf.Certificates {
 
-			if err := initDir(cert.privkey, 0700); err != nil {
+			if err := sameDir(cert.privkey, 0700); err != nil {
 				fatalf("dir: %v", err)
 			}
 
