@@ -1,4 +1,4 @@
-# ngxpkg
+# ngxpkg [![Build Status](https://travis-ci.org/webpkg/ngxpkg.svg?branch=master)] (https://travis-ci.org/webpkg/ngxpkg)
 
 A cli tool for nginx
 
