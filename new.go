@@ -35,6 +35,18 @@ func runNew(args []string) {
 		fatalf("no domain specified")
 	}
 
+	if err := createDir(configDir, 0700); err != nil {
+		fatalf("config dir: %v", err)
+	}
+
+	if err := createDir(siteConfDir, 0700); err != nil {
+		fatalf("site conf dir: %v", err)
+	}
+
+	if err := createDir(siteRootDir, 0755); err != nil {
+		fatalf("site root dir: %v", err)
+	}
+
 	siteConfData, err := siteResource(siteConfFile)
 
 	if err != nil {
