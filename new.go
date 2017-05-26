@@ -93,23 +93,22 @@ func runNew(args []string) {
 			WithSSL:  false,
 		}
 
-		created, err := writeTpl(confTpl, domainConfPath, data)
-
-		if err != nil {
-			fatalf("%s conf: %v", domain, err)
+		if err := writeTpl(confTpl, domainConfPath, data); err != nil {
+			if os.IsExist(err) {
+				continue
+			} else {
+				fatalf("%s conf: %v", domain, err)
+			}
 		}
 
-		if created {
+		domains = append(domains, domain)
 
-			domains = append(domains, domain)
+		if err := mkdirAll(domainPublicDir, 0755); err != nil {
+			fatalf("%s public: %v", domain, err)
+		}
 
-			if err := mkdirAll(domainPublicDir, 0755); err != nil {
-				fatalf("%s public: %v", domain, err)
-			}
-
-			if _, err := writeTpl(indexTpl, domainIndexPath, data); err != nil {
-				fatalf("%s index: %v", domain, err)
-			}
+		if err := writeTpl(indexTpl, domainIndexPath, data); err != nil {
+			fatalf("%s index: %v", domain, err)
 		}
 	}
 
