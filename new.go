@@ -94,11 +94,8 @@ func runNew(args []string) {
 		}
 
 		if err := writeTpl(confTpl, domainConfPath, data); err != nil {
-			if os.IsExist(err) {
-				continue
-			} else {
-				fatalf("%s conf: %v", domain, err)
-			}
+			logf("%s conf: %v", domain, err)
+			continue
 		}
 
 		domains = append(domains, domain)
