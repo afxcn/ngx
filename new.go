@@ -47,25 +47,25 @@ func runNew(args []string) {
 		fatalf("site root dir: %v", err)
 	}
 
-	siteConfData, err := fetchResource(siteConfFile)
+	confData, err := fetchResource(siteConfFile)
 
 	if err != nil {
 		fatalf("read conf: %v", err)
 	}
 
-	siteIndexData, err := fetchResource(siteIndexFile)
+	indexData, err := fetchResource(siteIndexFile)
 
 	if err != nil {
 		fatalf("read index: %v", err)
 	}
 
-	siteConfTpl, err := template.New("siteConf").Parse(string(siteConfData))
+	confTpl, err := template.New("siteConf").Parse(string(confData))
 
 	if err != nil {
 		fatalf("parse conf: %v", err)
 	}
 
-	siteIndexTpl, err := template.New("siteIndex").Parse(string(siteIndexData))
+	indexTpl, err := template.New("siteIndex").Parse(string(indexData))
 
 	if err != nil {
 		fatalf("parse index: %v", err)
@@ -93,7 +93,7 @@ func runNew(args []string) {
 			WithSSL:  false,
 		}
 
-		created, err := writeTpl(siteConfTpl, domainConfPath, data)
+		created, err := writeTpl(confTpl, domainConfPath, data)
 
 		if err != nil {
 			fatalf("%s conf: %v", domain, err)
@@ -107,7 +107,7 @@ func runNew(args []string) {
 				fatalf("%s public: %v", domain, err)
 			}
 
-			if _, err := writeTpl(siteIndexTpl, domainIndexPath, data); err != nil {
+			if _, err := writeTpl(indexTpl, domainIndexPath, data); err != nil {
 				fatalf("%s index: %v", domain, err)
 			}
 		}
@@ -165,7 +165,7 @@ func runNew(args []string) {
 			WithSSL:  true,
 		}
 
-		if err := editTpl(siteConfTpl, domainConfPath, data); err != nil {
+		if err := editTpl(confTpl, domainConfPath, data); err != nil {
 			fatalf("%s conf: %v", domain, err)
 		}
 

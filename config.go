@@ -22,17 +22,17 @@ const (
 )
 
 var (
-	configDir       string
-	directoryURL    string
-	siteResourceURL string
-	siteConfDir     string
-	siteRootDir     string
+	configDir    string
+	directoryURL string
+	resourceURL  string
+	siteConfDir  string
+	siteRootDir  string
 )
 
 func init() {
 	configDir = os.Getenv("NGX_CONFIG")
 	directoryURL = os.Getenv("NGX_DIRECTORY_URL")
-	siteResourceURL = os.Getenv("NGX_SITE_RESOURCE")
+	resourceURL = os.Getenv("NGX_RESOURCE")
 	siteConfDir = os.Getenv("NGX_SITE_CONFIG")
 	siteRootDir = os.Getenv("NGX_SITE_ROOT")
 
@@ -48,8 +48,8 @@ func init() {
 		directoryURL = "https://acme-v01.api.letsencrypt.org/directory"
 	}
 
-	if siteResourceURL == "" {
-		siteResourceURL = "https://rc.ngxpkg.com/"
+	if resourceURL == "" {
+		resourceURL = "https://rc.ngxpkg.com/"
 	}
 
 	if siteConfDir == "" {

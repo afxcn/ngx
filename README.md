@@ -6,7 +6,7 @@ A cli tool for nginx
 
 * NGX_CONFIG = 〜／.config／ngxpkg
 * NGX_DIRECTORY_URL = https://acme-v01.api.letsencrypt.org/directory
-* NGX_SITE_RESOURCE = https://rc.ngxpkg.com/
+* NGX_RESOURCE = https://rc.ngxpkg.com/
 * NGX_SITE_CONFIG = /etc/nginx/conf.d
 * NGX_SITE_ROOT = /opt/local/www
 

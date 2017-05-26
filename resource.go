@@ -22,7 +22,7 @@ func fetchResource(filename string) ([]byte, error) {
 	fp := filepath.Join(dir, filename)
 
 	if _, err := os.Stat(fp); os.IsNotExist(err) {
-		url := siteResourceURL + filename
+		url := resourceURL + filename
 
 		resp, err := http.Get(url)
 
