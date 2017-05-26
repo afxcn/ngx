@@ -47,25 +47,25 @@ func runNew(args []string) {
 		fatalf("site root dir: %v", err)
 	}
 
-	confData, err := fetchResource(siteConfFile)
+	conf, err := fetchResource(siteConfFile)
 
 	if err != nil {
 		fatalf("read conf: %v", err)
 	}
 
-	indexData, err := fetchResource(siteIndexFile)
+	index, err := fetchResource(siteIndexFile)
 
 	if err != nil {
 		fatalf("read index: %v", err)
 	}
 
-	confTpl, err := template.New("siteConf").Parse(string(confData))
+	confTpl, err := template.New("siteConf").Parse(string(conf))
 
 	if err != nil {
 		fatalf("parse conf: %v", err)
 	}
 
-	indexTpl, err := template.New("siteIndex").Parse(string(indexData))
+	indexTpl, err := template.New("siteIndex").Parse(string(index))
 
 	if err != nil {
 		fatalf("parse index: %v", err)

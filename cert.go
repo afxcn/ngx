@@ -32,14 +32,13 @@ func register(client *acme.Client) error {
 	defer cancel()
 
 	uc := &userConfig{}
-	a, err := client.Register(ctx, &uc.Account, prompt)
+	account, err := client.Register(ctx, &uc.Account, prompt)
 
 	if err != nil {
-		fmt.Println("====================")
 		return err
 	}
 
-	uc.Account = *a
+	uc.Account = *account
 
 	if err := writeConfig(uc); err != nil {
 		return err

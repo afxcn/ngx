@@ -93,11 +93,7 @@ func help(args []string) {
 				fmt.Fprintf(os.Stdout, "usage: ngx %s\n", cmd.UsageLine)
 			}
 			data := struct {
-				ConfigDir    string
-				AccountFile  string
-				AccountKey   string
-				DefaultDisco string
-				DiscoAliases map[string]string
+				ConfigDir string
 			}{
 				ConfigDir: configDir,
 			}
