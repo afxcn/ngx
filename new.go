@@ -35,25 +35,25 @@ func runNew(args []string) {
 		fatalf("no domain specified")
 	}
 
-	if err := createDir(configDir, 0700); err != nil {
+	if err := mkdirAll(configDir, 0700); err != nil {
 		fatalf("config dir: %v", err)
 	}
 
-	if err := createDir(siteConfDir, 0700); err != nil {
+	if err := mkdirAll(siteConfDir, 0700); err != nil {
 		fatalf("site conf dir: %v", err)
 	}
 
-	if err := createDir(siteRootDir, 0755); err != nil {
+	if err := mkdirAll(siteRootDir, 0755); err != nil {
 		fatalf("site root dir: %v", err)
 	}
 
-	siteConfData, err := siteResource(siteConfFile)
+	siteConfData, err := fetchResource(siteConfFile)
 
 	if err != nil {
 		fatalf("read conf: %v", err)
 	}
 
-	siteIndexData, err := siteResource(siteIndexFile)
+	siteIndexData, err := fetchResource(siteIndexFile)
 
 	if err != nil {
 		fatalf("read index: %v", err)
@@ -79,7 +79,7 @@ func runNew(args []string) {
 		domainPublicDir := filepath.Join(domainRootDir, "public")
 		domainIndexPath := filepath.Join(domainPublicDir, siteIndexFile)
 
-		if err := createDir(domainRootDir, 0755); err != nil {
+		if err := mkdirAll(domainRootDir, 0755); err != nil {
 			fatalf("%s root: %v", domain, err)
 		}
 
@@ -103,7 +103,7 @@ func runNew(args []string) {
 
 			domains = append(domains, domain)
 
-			if err := createDir(domainPublicDir, 0755); err != nil {
+			if err := mkdirAll(domainPublicDir, 0755); err != nil {
 				fatalf("%s public: %v", domain, err)
 			}
 

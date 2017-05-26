@@ -8,14 +8,14 @@ import (
 	"path/filepath"
 )
 
-func siteResource(filename string) ([]byte, error) {
+func fetchResource(filename string) ([]byte, error) {
 	if filename == "" {
-		return nil, errors.New("ngx: invalid resource filename")
+		return nil, errors.New("ngx: empty resource name")
 	}
 
 	dir := filepath.Join(configDir, "rc")
 
-	if err := createDir(dir, 0700); err != nil {
+	if err := mkdirAll(dir, 0700); err != nil {
 		return nil, err
 	}
 
@@ -43,9 +43,6 @@ func siteResource(filename string) ([]byte, error) {
 		}
 
 		return bytes, nil
-
-	} else if err != nil {
-		return nil, err
 	}
 
 	bytes, err := ioutil.ReadFile(fp)
@@ -59,7 +56,7 @@ func siteResource(filename string) ([]byte, error) {
 
 func writeResource(filename string) error {
 	if filename == "" {
-		return errors.New("ngx: invalid filename")
+		return errors.New("ngx: empty resource name")
 	}
 
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
@@ -67,13 +64,13 @@ func writeResource(filename string) error {
 			return err
 		}
 
-		data, err := siteResource(filepath.Base(filename))
+		bytes, err := fetchResource(filepath.Base(filename))
 
 		if err != nil {
 			return err
 		}
 
-		return ioutil.WriteFile(filename, data, 0600)
+		return ioutil.WriteFile(filename, bytes, 0600)
 
 	}
 
