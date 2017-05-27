@@ -27,7 +27,15 @@ and create sites:
 * /opt/local/www/test1.com/
 * /opt/local/www/test2.com/
 
-and apply ssl Certificates for sites.
+and apply ssl certificates for sites.
+
+## renew ssl with domains test1.com, test2.com ...
+
+```bash
+ngx renew test1.com test2.com
+```
+
+it will renew all ssl certificates list on sites conf file when it's valid days less then NGX_ALLOW_RENEW_DAYS
 
 ## Notice.
 
