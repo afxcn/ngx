@@ -35,6 +35,15 @@ please replace the files with yours after create new site.
 * dhparam.pem
 * ticket.pem
 
+## Reference Links
+
+https://github.com/google/acme
+
+https://gethttpsforfree.com/
+
+https://mozilla.github.io/server-side-tls/ssl-config-generator/
+
+
 ## License
 
 Copyright (C) 2017  ZhiQiang Huang (email: ngxpkg@gmail.com)
