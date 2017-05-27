@@ -29,7 +29,7 @@ and create sites:
 
 and apply ssl certificates for sites.
 
-## renew ssl with domains test1.com, test2.com ...
+## Renew ssl with domains test1.com, test2.com ...
 
 ```bash
 ngx renew test1.com test2.com
