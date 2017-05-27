@@ -51,6 +51,7 @@ func register(client *acme.Client) error {
 	defer cancel()
 
 	uc := &userConfig{}
+
 	account, err := client.Register(ctx, &uc.Account, prompt)
 
 	if err != nil {
@@ -67,20 +68,26 @@ func register(client *acme.Client) error {
 }
 
 func authz(ctx context.Context, client *acme.Client, domainPublic string, domain string) error {
+
 	z, err := client.Authorize(ctx, domain)
+
 	if err != nil {
 		return err
 	}
+
 	if z.Status == acme.StatusValid {
 		return nil
 	}
+
 	var chal *acme.Challenge
+
 	for _, c := range z.Challenges {
 		if c.Type == "http-01" {
 			chal = c
 			break
 		}
 	}
+
 	if chal == nil {
 		return errors.New("no supported challenge found")
 	}
@@ -104,31 +111,40 @@ func authz(ctx context.Context, client *acme.Client, domainPublic string, domain
 	if _, err := client.Accept(ctx, chal); err != nil {
 		return fmt.Errorf("accept challenge: %v", err)
 	}
+
 	_, err = client.WaitAuthorization(ctx, z.URI)
+
 	return err
 }
 
 func readKey(path string) (crypto.Signer, error) {
-	b, err := ioutil.ReadFile(path)
+
+	bytes, err := ioutil.ReadFile(path)
+
 	if err != nil {
 		return nil, err
 	}
-	d, _ := pem.Decode(b)
-	if d == nil {
+
+	block, _ := pem.Decode(bytes)
+
+	if block == nil {
 		return nil, fmt.Errorf("no block found in %q", path)
 	}
-	switch d.Type {
+
+	switch block.Type {
 	case rsaPrivateKey:
-		return x509.ParsePKCS1PrivateKey(d.Bytes)
+		return x509.ParsePKCS1PrivateKey(block.Bytes)
 	case ecPrivateKey:
-		return x509.ParseECPrivateKey(d.Bytes)
+		return x509.ParseECPrivateKey(block.Bytes)
 	default:
-		return nil, fmt.Errorf("%q is unsupported", d.Type)
+		return nil, fmt.Errorf("%q is unsupported", block.Type)
 	}
 }
 
 func writeKey(path string, key crypto.PrivateKey) error {
-	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+
+	fn, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+
 	if err != nil {
 		return err
 	}
@@ -149,27 +165,34 @@ func writeKey(path string, key crypto.PrivateKey) error {
 		return errors.New("unknown private key type")
 	}
 
-	if err := pem.Encode(f, block); err != nil {
-		f.Close()
+	if err := pem.Encode(fn, block); err != nil {
+		fn.Close()
 		return err
 	}
-	return f.Close()
+
+	return fn.Close()
 }
 
 func anyKey(filename string) (crypto.Signer, error) {
+
 	key, err := readKey(filename)
+
 	if err == nil {
 		return key, nil
 	}
+
 	if !os.IsNotExist(err) {
 		return nil, err
 	}
 
 	if strings.Contains(filename, ".ecdsa") {
+
 		privkey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+
 		if err != nil {
 			return nil, err
 		}
+
 		return privkey, writeKey(filename, privkey)
 	}
 
@@ -177,8 +200,8 @@ func anyKey(filename string) (crypto.Signer, error) {
 	if err != nil {
 		return nil, err
 	}
-	return privkey, writeKey(filename, privkey)
 
+	return privkey, writeKey(filename, privkey)
 }
 
 func prompt(tos string) bool {
