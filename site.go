@@ -25,7 +25,7 @@ import (
 )
 
 var (
-	confSslRegex = regexp.MustCompile(`(ssl_certificate|ssl_certificate_key|ssl_session_ticket_key|ssl_dhparam|ssl_trusted_certificate)\s+([a-z0-9_\-\.\/]+?);`)
+	confSslRegex = regexp.MustCompile(`(root|ssl_certificate|ssl_certificate_key|ssl_session_ticket_key|ssl_dhparam|ssl_trusted_certificate)\s+([a-z0-9_\-\.\/]+?);`)
 )
 
 type ngxCertificate struct {
@@ -38,9 +38,10 @@ type ngxSiteConf struct {
 	SslSessionTicketKey   string
 	SslDHParam            string
 	SslTrustedCertificate string
+	DomainPublicDir       string
 }
 
-func parseSiteConf(domain string, confFilename string) (*ngxSiteConf, error) {
+func parseSiteConf(confFilename string) (*ngxSiteConf, error) {
 	text, err := ioutil.ReadFile(confFilename)
 
 	if err != nil {
@@ -84,6 +85,10 @@ func parseSiteConf(domain string, confFilename string) (*ngxSiteConf, error) {
 				conf.SslDHParam = value
 			case "ssl_trusted_certificate":
 				conf.SslTrustedCertificate = value
+			case "root":
+				if conf.DomainPublicDir == "" {
+					conf.DomainPublicDir = value
+				}
 			}
 		}
 

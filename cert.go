@@ -40,11 +40,6 @@ import (
 	"golang.org/x/crypto/acme"
 )
 
-var (
-	certExpiry = 365 * 24 * time.Hour
-	certBundle = true
-)
-
 func register(client *acme.Client) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
@@ -197,6 +192,7 @@ func anyKey(filename string) (crypto.Signer, error) {
 	}
 
 	privkey, err := rsa.GenerateKey(rand.Reader, 2048)
+
 	if err != nil {
 		return nil, err
 	}
@@ -204,6 +200,57 @@ func anyKey(filename string) (crypto.Signer, error) {
 	return privkey, writeKey(filename, privkey)
 }
 
+func memKey(filename string) (crypto.Signer, error) {
+
+	key, err := readKey(filename)
+
+	if err == nil {
+		return key, nil
+	}
+
+	if !os.IsNotExist(err) {
+		return nil, err
+	}
+
+	if strings.Contains(filename, ".ecdsa") {
+
+		privkey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return privkey, nil
+	}
+
+	privkey, err := rsa.GenerateKey(rand.Reader, 2048)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return privkey, nil
+}
+
 func prompt(tos string) bool {
 	return true
+}
+
+func parseCertificate(path string) (*x509.Certificate, error) {
+
+	bytes, err := ioutil.ReadFile(path)
+
+	if err != nil {
+		return nil, err
+	}
+
+	block, _ := pem.Decode(bytes)
+
+	cert, err := x509.ParseCertificate(block.Bytes)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return cert, nil
 }

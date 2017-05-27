@@ -25,6 +25,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"strconv"
 
 	"golang.org/x/crypto/acme"
 )
@@ -41,11 +42,12 @@ const (
 )
 
 var (
-	configDir    string
-	directoryURL string
-	resourceURL  string
-	siteConfDir  string
-	siteRootDir  string
+	configDir      string
+	directoryURL   string
+	allowRenewDays int
+	resourceURL    string
+	siteConfDir    string
+	siteRootDir    string
 )
 
 func init() {
@@ -77,6 +79,12 @@ func init() {
 
 	if siteRootDir == "" {
 		siteRootDir = "/opt/local/www"
+	}
+
+	allowRenewDays, _ = strconv.Atoi(os.Getenv("NGX_ALLOW_RENEW_DAYS"))
+
+	if allowRenewDays > 30 || allowRenewDays < 7 {
+		allowRenewDays = 30
 	}
 }
 

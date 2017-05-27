@@ -128,11 +128,7 @@ func runNew(args []string) {
 		}
 
 		if err := writeTpl(indexTpl, domainIndexPath, data); err != nil {
-			if os.IsExist(err) {
-				logf("%s index: %v", domain, err)
-			} else {
-				fatalf("%s index: %v", domain, err)
-			}
+			logf("%s index: %v", domain, err)
 		}
 	}
 
@@ -161,10 +157,11 @@ func runNew(args []string) {
 			if err := register(client); err != nil {
 				fatalf("register: %v", err)
 			}
-		} else if err != nil {
-			fatalf("user config: %v", err)
 		}
 	}
+
+	certExpiry := 365 * 24 * time.Hour
+	certBundle := true
 
 	for _, domain := range domains {
 
@@ -192,7 +189,7 @@ func runNew(args []string) {
 			fatalf("%s conf: %v", domain, err)
 		}
 
-		conf, err := parseSiteConf(domain, domainConfPath)
+		conf, err := parseSiteConf(domainConfPath)
 
 		if err != nil {
 			fatalf("%s conf: %v", domain, err)

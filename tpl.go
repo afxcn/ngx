@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package main
 
 import (
-	"errors"
 	"html/template"
 	"os"
 )
@@ -44,7 +43,7 @@ func writeTpl(tpl *template.Template, fp string, data interface{}) error {
 		return nil
 	}
 
-	return errors.New("tpl: file exists, skip")
+	return os.ErrExist
 }
 
 func editTpl(tpl *template.Template, fp string, data interface{}) error {
