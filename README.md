@@ -2,6 +2,25 @@
 
 A cli tool for nginx
 
+## Install
+
+install go before use ngxpkg, how to install go please look at https://golang.org/doc/install
+
+```bash
+go get github.com/webpkg/ngxpkg
+
+mv $GOPATH/bin/ngxpkg $GOPATH/bin/ngx
+```
+
+or you can build it for other system by use
+
+```bash
+go get github.com/webpkg/ngxpkg
+
+cd $GOPATH/src/github.com/webpkg/ngxpkg/
+
+make
+```
 ## Default Env
 
 * NGX_CONFIG = 〜／.config／ngxpkg

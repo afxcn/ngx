@@ -82,7 +82,7 @@ func runRenew(args []string) {
 			days := int(c.NotAfter.Sub(time.Now()).Hours() / 24)
 
 			if days > allowRenewDays {
-				logf("%s still %d days valid, skip.", filepath.Base(cert.fullchain), days)
+				logf("%s %d days valid, skip.", filepath.Base(cert.fullchain), days)
 				continue
 			}
 
