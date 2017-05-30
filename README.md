@@ -64,7 +64,12 @@ and create sites:
     - /opt/local/www/conf/dhparam.pem
     - /opt/local/www/conf/ticket.pem
 
-and apply ssl certificates for sites.
+## Notice.
+
+please replace the files with yours after create new site.
+
+* /opt/local/www/conf/dhparam.pem
+* /opt/local/www/conf/ticket.pem
 
 ## Renew ssl with domains test1.com, test2.com ...
 
@@ -73,13 +78,6 @@ ngx renew test1.com test2.com
 ```
 
 it will renew all ssl certificates list on sites conf file when it's valid days less then NGX_ALLOW_RENEW_DAYS
-
-## Notice.
-
-please replace the files with yours after create new site.
-
-* dhparam.pem
-* ticket.pem
 
 ## Reference Links
 
