@@ -45,24 +45,24 @@ it will create conf files:
 and create sites:
 
 * /opt/local/www/test1.com/
-- /opt/local/www/test1.com/public
-- /opt/local/www/test1.com/conf/fullchain.ecdsa.pem
-- /opt/local/www/test1.com/conf/privkey.ecdsa.pem
-- /opt/local/www/test1.com/conf/fullchain.rsa.pem
-- /opt/local/www/test1.com/conf/privkey.rsa.pem
-- /opt/local/www/test1.com/conf/ocsp.pem
+    - /opt/local/www/test1.com/public
+    - /opt/local/www/test1.com/conf/fullchain.ecdsa.pem
+    - /opt/local/www/test1.com/conf/privkey.ecdsa.pem
+    - /opt/local/www/test1.com/conf/fullchain.rsa.pem
+    - /opt/local/www/test1.com/conf/privkey.rsa.pem
+    - /opt/local/www/test1.com/conf/ocsp.pem
 
 * /opt/local/www/test2.com/
-- /opt/local/www/test2.com/public
-- /opt/local/www/test2.com/conf/fullchain.ecdsa.pem
-- /opt/local/www/test2.com/conf/privkey.ecdsa.pem
-- /opt/local/www/test2.com/conf/fullchain.rsa.pem
-- /opt/local/www/test2.com/conf/privkey.rsa.pem
-- /opt/local/www/test2.com/conf/ocsp.pem
+    - /opt/local/www/test2.com/public
+    - /opt/local/www/test2.com/conf/fullchain.ecdsa.pem
+    - /opt/local/www/test2.com/conf/privkey.ecdsa.pem
+    - /opt/local/www/test2.com/conf/fullchain.rsa.pem
+    - /opt/local/www/test2.com/conf/privkey.rsa.pem
+    - /opt/local/www/test2.com/conf/ocsp.pem
 
 * /opt/local/www/conf
-- /opt/local/www/conf/dhparam.pem
-- /opt/local/www/conf/ticket.pem
+    - /opt/local/www/conf/dhparam.pem
+    - /opt/local/www/conf/ticket.pem
 
 and apply ssl certificates for sites.
 
