@@ -31,34 +31,34 @@ make
 * NGX_SITE_CONFIG = /etc/nginx/conf.d
 * NGX_SITE_ROOT = /opt/local/www
 
-## Create new sites with domains test1.com, test2.com ...
+## Create new sites with domains ngxpkg.com, dbpkg.com ...
 
 ```bash
-ngx new test1.com test2.com
+ngx new ngxpkg.com dbpkg.com
 ```
 
 it will create conf files:
 
-* /etc/nginx/conf.d/test1.com.conf
-* /etc/nginx/conf.d/test2.com.conf
+* /etc/nginx/conf.d/ngxpkg.com.conf
+* /etc/nginx/conf.d/dbpkg.com.conf
 
 and create sites:
 
-* /opt/local/www/test1.com/
-    - /opt/local/www/test1.com/public
-    - /opt/local/www/test1.com/conf/fullchain.ecdsa.pem
-    - /opt/local/www/test1.com/conf/privkey.ecdsa.pem
-    - /opt/local/www/test1.com/conf/fullchain.rsa.pem
-    - /opt/local/www/test1.com/conf/privkey.rsa.pem
-    - /opt/local/www/test1.com/conf/ocsp.pem
+* /opt/local/www/ngxpkg.com/
+    - /opt/local/www/ngxpkg.com/public
+    - /opt/local/www/ngxpkg.com/conf/fullchain.ecdsa.pem
+    - /opt/local/www/ngxpkg.com/conf/privkey.ecdsa.pem
+    - /opt/local/www/ngxpkg.com/conf/fullchain.rsa.pem
+    - /opt/local/www/ngxpkg.com/conf/privkey.rsa.pem
+    - /opt/local/www/ngxpkg.com/conf/ocsp.pem
 
-* /opt/local/www/test2.com/
-    - /opt/local/www/test2.com/public
-    - /opt/local/www/test2.com/conf/fullchain.ecdsa.pem
-    - /opt/local/www/test2.com/conf/privkey.ecdsa.pem
-    - /opt/local/www/test2.com/conf/fullchain.rsa.pem
-    - /opt/local/www/test2.com/conf/privkey.rsa.pem
-    - /opt/local/www/test2.com/conf/ocsp.pem
+* /opt/local/www/dbpkg.com/
+    - /opt/local/www/dbpkg.com/public
+    - /opt/local/www/dbpkg.com/conf/fullchain.ecdsa.pem
+    - /opt/local/www/dbpkg.com/conf/privkey.ecdsa.pem
+    - /opt/local/www/dbpkg.com/conf/fullchain.rsa.pem
+    - /opt/local/www/dbpkg.com/conf/privkey.rsa.pem
+    - /opt/local/www/dbpkg.com/conf/ocsp.pem
 
 * /opt/local/www/conf
     - /opt/local/www/conf/dhparam.pem
@@ -71,10 +71,10 @@ please replace the files with yours after create new site.
 * /opt/local/www/conf/dhparam.pem
 * /opt/local/www/conf/ticket.pem
 
-## Renew ssl with domains test1.com, test2.com ...
+## Renew ssl with domains ngxpkg.com, dbpkg.com ...
 
 ```bash
-ngx renew test1.com test2.com
+ngx renew ngxpkg.com dbpkg.com
 ```
 
 it will renew all ssl certificates list on sites conf file when it's valid days less then NGX_ALLOW_RENEW_DAYS
