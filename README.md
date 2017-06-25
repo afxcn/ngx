@@ -4,7 +4,7 @@ A cli tool for nginx
 
 ## Install
 
-Install go before use ngxpkg, or you can download release version.
+Install go before use ngxpkg, or you can download [release](https://github.com/webpkg/ngxpkg/releases) version.
 How to install go please look at https://golang.org/doc/install
 
 ```bash
