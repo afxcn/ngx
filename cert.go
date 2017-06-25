@@ -103,13 +103,19 @@ func authz(ctx context.Context, client *acme.Client, domainPublic string, domain
 		return err
 	}
 
+	defer func() {
+		os.Remove(path)
+	}()
+
 	if _, err := client.Accept(ctx, chal); err != nil {
 		return fmt.Errorf("accept challenge: %v", err)
 	}
 
-	_, err = client.WaitAuthorization(ctx, z.URI)
+	if _, err = client.WaitAuthorization(ctx, z.URI); err != nil {
+		return err
+	}
 
-	return err
+	return nil
 }
 
 func readKey(path string) (crypto.Signer, error) {

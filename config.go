@@ -87,7 +87,11 @@ func init() {
 		allowRenewDays = 30
 	}
 
-	if allowRenewDays > 30 || allowRenewDays < 7 {
+	if allowRenewDays < 7 {
+		allowRenewDays = 7
+	}
+
+	if allowRenewDays > 30 {
 		allowRenewDays = 30
 	}
 }
