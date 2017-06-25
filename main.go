@@ -31,6 +31,7 @@ var (
 	commands = []*command{
 		cmdNew,
 		cmdRenew,
+		cmdVersion,
 	}
 	exitMu     sync.Mutex
 	exitStatus = 0

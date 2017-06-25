@@ -41,9 +41,9 @@ var (
 	cmdNew = &command{
 		run:       runNew,
 		UsageLine: "new domain [domain ...]",
-		Short:     "create a new site",
+		Short:     "create new sites",
 		Long: `
-create an new site base on template site.conf and apply certs.
+create new sites base on template site.conf and apply certs.
 
 `,
 	}

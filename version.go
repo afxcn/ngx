@@ -33,10 +33,6 @@ var (
 	}
 )
 
-func init() {
-	commands = append([]*command{cmdVersion}, commands...)
-}
-
 func runVersion(args []string) {
 	fmt.Println(version, osarch)
 }
