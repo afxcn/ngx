@@ -81,7 +81,11 @@ func init() {
 		siteRootDir = "/opt/local/www"
 	}
 
-	allowRenewDays, _ = strconv.Atoi(os.Getenv("NGX_ALLOW_RENEW_DAYS"))
+	allowRenewDays, err := strconv.Atoi(os.Getenv("NGX_ALLOW_RENEW_DAYS"))
+
+	if err != nil {
+		allowRenewDays = 30
+	}
 
 	if allowRenewDays > 30 || allowRenewDays < 7 {
 		allowRenewDays = 30
@@ -90,13 +94,6 @@ func init() {
 
 type userConfig struct {
 	acme.Account
-}
-
-type serverConfig struct {
-	ServerName string
-	IPAddress  string
-	Username   string
-	Password   string
 }
 
 func readConfig() (*userConfig, error) {
