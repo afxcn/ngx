@@ -62,9 +62,9 @@ func main() {
 			exit()
 			return
 		}
-
-		fatalf("Unknown subcommand %q.\nRun 'ngx help' for usage.\n", args[0])
 	}
+
+	fatalf("Unknown subcommand %q.\nRun 'ngx help' for usage.\n", args[0])
 }
 
 type command struct {

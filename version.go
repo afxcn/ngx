@@ -22,7 +22,7 @@ package main
 import "fmt"
 
 var (
-	version = "0.0.1"
+	version = "v0.0.1"
 	osarch  string // set by ldflags
 
 	cmdVersion = &command{
