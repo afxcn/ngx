@@ -34,7 +34,7 @@ make
 ## Create new sites with domains ngxpkg.com, dbpkg.com ...
 
 ```bash
-ngx new ngxpkg.com dbpkg.com
+ngc new ngxpkg.com dbpkg.com
 ```
 
 it will create conf files:
@@ -74,7 +74,7 @@ please replace the files with yours after create new site.
 ## Renew ssl with domains ngxpkg.com, dbpkg.com ...
 
 ```bash
-ngx renew ngxpkg.com dbpkg.com
+ngc renew ngxpkg.com dbpkg.com
 ```
 
 it will renew all ssl certificates list on sites conf file when it's valid days less then NGX_ALLOW_RENEW_DAYS
