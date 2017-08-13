@@ -10,7 +10,7 @@ How to install go please look at https://golang.org/doc/install
 ```bash
 go get github.com/webpkg/ngxpkg
 
-mv $GOPATH/bin/ngxpkg $GOPATH/bin/ngx
+mv $GOPATH/bin/ngxpkg $GOPATH/bin/ngc
 ```
 
 or you can build it for other system by use
