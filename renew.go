@@ -75,8 +75,7 @@ func runRenew(args []string) {
 			}
 
 			if !strings.Contains(c.Issuer.CommonName, "Let's Encrypt") {
-				logf("%s Issuer '%s' not support acme, skip.", filepath.Base(cert.fullchain), c.Issuer.CommonName)
-				continue
+				logf("warn: %s Issuer '%s' not support acme.", filepath.Base(cert.fullchain), c.Issuer.CommonName)
 			}
 
 			days := int(c.NotAfter.Sub(time.Now()).Hours() / 24)
