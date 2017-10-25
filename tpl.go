@@ -36,11 +36,7 @@ func writeTpl(tpl *template.Template, fp string, data interface{}) error {
 
 		defer fn.Close()
 
-		if err := tpl.Execute(fn, data); err != nil {
-			return err
-		}
-
-		return nil
+		return tpl.Execute(fn, data)
 	}
 
 	return os.ErrExist
@@ -56,9 +52,5 @@ func editTpl(tpl *template.Template, fp string, data interface{}) error {
 
 	defer fn.Close()
 
-	if err := tpl.Execute(fn, data); err != nil {
-		return err
-	}
-
-	return nil
+	return tpl.Execute(fn, data)
 }

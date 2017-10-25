@@ -38,7 +38,7 @@ import (
 )
 
 var (
-	cmdNew = &command{
+	cmdNew = &cmd{
 		run:       runNew,
 		UsageLine: "new domain [domain ...]",
 		Short:     "create new sites",

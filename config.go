@@ -48,6 +48,7 @@ var (
 	resourceURL    string
 	siteConfDir    string
 	siteRootDir    string
+	force          bool
 )
 
 func init() {
@@ -93,6 +94,15 @@ func init() {
 
 	if allowRenewDays > 30 {
 		allowRenewDays = 30
+	}
+
+	force, err := strconv.ParseBool(os.Getenv("NGX_FORCE"))
+
+	if err != nil {
+		force = false
+	}
+
+	if force {
 	}
 }
 

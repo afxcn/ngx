@@ -28,7 +28,7 @@ import (
 )
 
 var (
-	commands = []*command{
+	commands = []*cmd{
 		cmdNew,
 		cmdRenew,
 		cmdVersion,
@@ -67,7 +67,7 @@ func main() {
 	fatalf("Unknown subcommand %q.\nRun 'ngx help' for usage.\n", args[0])
 }
 
-type command struct {
+type cmd struct {
 	run       func(args []string)
 	flag      flag.FlagSet
 	UsageLine string
@@ -75,7 +75,7 @@ type command struct {
 	Long      string
 }
 
-func (c *command) Name() string {
+func (c *cmd) Name() string {
 	name := c.UsageLine
 	i := strings.IndexRune(name, ' ')
 	if i >= 0 {
@@ -84,12 +84,12 @@ func (c *command) Name() string {
 	return name
 }
 
-func (c *command) Usage() {
+func (c *cmd) Usage() {
 	help([]string{c.Name()})
 	os.Exit(2)
 }
 
-func (c *command) Runnable() bool {
+func (c *cmd) Runnable() bool {
 	return c.run != nil
 }
 
@@ -118,5 +118,11 @@ func exit() {
 }
 
 func addFlags(f *flag.FlagSet) {
-	f.StringVar(&configDir, "c", configDir, "")
+	f.StringVar(&configDir, "configDir", configDir, "")
+	f.StringVar(&directoryURL, "directoryURL", directoryURL, "")
+	f.StringVar(&resourceURL, "resourceURL", resourceURL, "")
+	f.StringVar(&siteConfDir, "siteConfDir", siteConfDir, "")
+	f.StringVar(&siteRootDir, "siteRootDir", siteRootDir, "")
+	f.IntVar(&allowRenewDays, "allowRenewDays", allowRenewDays, "")
+	f.BoolVar(&force, "force", force, "")
 }

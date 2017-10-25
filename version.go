@@ -25,7 +25,7 @@ var (
 	version = "v0.0.1"
 	osarch  string // set by ldflags
 
-	cmdVersion = &command{
+	cmdVersion = &cmd{
 		run:       runVersion,
 		UsageLine: "version",
 		Short:     "display ngx version",
