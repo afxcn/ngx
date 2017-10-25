@@ -74,18 +74,16 @@ func runRenew(args []string) {
 				fatalf("%s cert: %v", domain, err)
 			}
 
-			if !force {
-				if !strings.Contains(c.Issuer.CommonName, "Let's Encrypt") {
-					logf("%s Issuer '%s' not support acme, skip.", filepath.Base(cert.fullchain), c.Issuer.CommonName)
-					continue
-				}
+			if !strings.Contains(c.Issuer.CommonName, "Let's Encrypt") {
+				logf("%s Issuer '%s' not support acme, skip.", filepath.Base(cert.fullchain), c.Issuer.CommonName)
+				continue
+			}
 
-				days := int(c.NotAfter.Sub(time.Now()).Hours() / 24)
+			days := int(c.NotAfter.Sub(time.Now()).Hours() / 24)
 
-				if days > allowRenewDays {
-					logf("%s %d days valid, skip.", filepath.Base(cert.fullchain), days)
-					continue
-				}
+			if days > allowRenewDays {
+				logf("%s %d days valid, skip.", filepath.Base(cert.fullchain), days)
+				continue
 			}
 
 			if client == nil {

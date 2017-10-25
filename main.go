@@ -124,5 +124,4 @@ func addFlags(f *flag.FlagSet) {
 	f.StringVar(&siteConfDir, "siteConfDir", siteConfDir, "")
 	f.StringVar(&siteRootDir, "siteRootDir", siteRootDir, "")
 	f.IntVar(&allowRenewDays, "allowRenewDays", allowRenewDays, "")
-	f.BoolVar(&force, "force", force, "")
 }
