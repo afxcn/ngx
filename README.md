@@ -87,14 +87,6 @@ https://gethttpsforfree.com/
 
 https://mozilla.github.io/server-side-tls/ssl-config-generator/
 
-## Copyright notice
-
-https://github.com/google/acme is under [Apache-2.0](https://github.com/google/acme/blob/master/LICENSE)
-
-https://github.com/diafygi/gethttpsforfree is under [MIT](https://github.com/diafygi/gethttpsforfree/blob/gh-pages/LICENSE)
-
-https://github.com/mozilla/server-side-tls is under [MPL-2.0](https://github.com/mozilla/server-side-tls/blob/gh-pages/LICENSE)
-
 ## License
 
 Copyright (C) 2017 ZhiQiang Huang, All Rights Reserved.
