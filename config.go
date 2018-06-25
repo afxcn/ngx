@@ -1,6 +1,6 @@
 /**
 
-Copyright (C) 2017 ZhiQiang Huang, All Rights Reserved.
+Copyright (C) 2017-2018 ZhiQiang Huang, All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -51,7 +51,7 @@ var (
 )
 
 func init() {
-	configDir = os.Getenv("NGX_CONFIG")
+	configDir = os.Getenv("NGXPKG_CONFIG")
 	directoryURL = os.Getenv("NGX_DIRECTORY_URL")
 	resourceURL = os.Getenv("NGX_RESOURCE")
 	siteConfDir = os.Getenv("NGX_SITE_CONFIG")

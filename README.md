@@ -89,7 +89,7 @@ https://mozilla.github.io/server-side-tls/ssl-config-generator/
 
 ## License
 
-Copyright (C) 2017 ZhiQiang Huang, All Rights Reserved.
+Copyright (C) 2017-2018 ZhiQiang Huang, All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
