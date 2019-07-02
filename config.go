@@ -70,7 +70,7 @@ func init() {
 	}
 
 	if resourceURL == "" {
-		resourceURL = "https://rc.ngxpkg.com/"
+		resourceURL = "https://ngxpkg.com/rc/"
 	}
 
 	if siteConfDir == "" {
