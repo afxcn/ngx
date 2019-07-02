@@ -27,7 +27,7 @@ make
 * NGX_CONFIG = 〜／.config／ngxpkg
 * NGX_DIRECTORY_URL = https://acme-v01.api.letsencrypt.org/directory
 * NGX_ALLOW_RENEW_DAYS = 30
-* NGX_RESOURCE = https://rc.ngxpkg.com/
+* NGX_RESOURCE = https://ngxpkg.com/rc/
 * NGX_SITE_CONFIG = /etc/nginx/conf.d
 * NGX_SITE_ROOT = /opt/local/www
 
